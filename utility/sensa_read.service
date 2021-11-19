@@ -1,0 +1,10 @@
+[Unit]
+Description=excahnge data between Sensacore Blood Gas analyser and inbox/outbox using manufacturer defined protocol
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/root/sensa/sensa_read.py
+
+[Install]
+WantedBy=multi-user.target

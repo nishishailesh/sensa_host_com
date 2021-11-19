@@ -161,226 +161,77 @@ def analyse_file(fh):
                         
   return all_records_dict
   
-def manage_all_record(all_record_tuple):
-  for record in all_record_tuple:
-    manage_record(record)
+def manage_all_record(all_record_dict):
+  for record in all_record_dict:
+    #print(record)
+    manage_record(record,all_record_dict[record])
 
+def manage_record(sid,data):
+  print_to_log("sample_id:",sid)
+  print_to_log("data:",data)
 
-def mk_histogram_from_tuple(xy,heading,x_axis,y_axis,axis_range_tuple,peak_data_dict):
-  #print(x)
-  #print(y)
-  
-  #at_level=max(xy[1])/20*0.8
-  #at_level_offset=at_level*0.1
-  
-  for each_peak_name in peak_data_dict:
-    at_level=min(xy[1][int(peak_data_dict[each_peak_name]['peak_top'])],max(xy[1])/20*0.6)
-    plt.annotate(each_peak_name+'('+ peak_data_dict[each_peak_name]['peak_persent']  +')',(float(peak_data_dict[each_peak_name]['peak_top'])*0.2/60,at_level),rotation=90,verticalalignment='bottom',)
-    print_to_log(each_peak_name,(float(peak_data_dict[each_peak_name]['peak_top'])*0.2/60,at_level))
-    #at_level=at_level-at_level_offset
-  plt.plot(xy[0], xy[1]) 
-  plt.xlabel(x_axis) 
-  plt.ylabel(y_axis)
-  plt.axis(axis_range_tuple) 
-  plt.title(heading) 
-  f = io.BytesIO()
-  plt.savefig(f, format='png')
-  f.seek(0)
-  data=f.read()
-  f.close()
-  plt.close()	#otherwise graphs will be overwritten, in next loop
-  return data
+  date_time=data[b'Date'][6:]
+  print_to_log("date_time:",date_time)
 
-def manage_record(record):
-  #print_to_log("single record:",record)
-  print_to_log("########",'#########')
-  print_to_log("### managing record 1 (Sample Information):",record['1'])
-  print_to_log("0 =STD mode, 1 = VAR mode, 2 = β-thalassemia mode :",record['1'][0:1].strip())
-  print_to_log("0 = STAT, 1 = transport (LA), 2 = loader : ",record['1'][1:2].strip())
-  sample_id=record['1'][2:].strip()
-  print_to_log("sample_id:",sample_id)
-  print_to_log("### managing record 2 (Sample Number) Not used at all here : ",record['2'])
-  uniq=equipment+'_'+record['2']
-  print_to_log("### managing record 3 (Measurement value):",record['3'])
-  print_to_log("Flag ??:",record['3'][0:2])
-  
-  hba1=record['3'][2:2+5].strip()
-  print_to_log("HbA1 (Total Glycated Hemoglobin:)",hba1)
-  
-  hba1a=record['3'][7:7+5].strip()
-  print_to_log("HbA1a: ",hba1a)
-  
-  hba1b=record['3'][12:12+5].strip()
-  print_to_log("HbA1b: ",hba1b)
-  
-  hbf=record['3'][17:17+5].strip()
-  print_to_log("HbF: ",hbf)
+  pH=data[b'pH'].split()[0]
+  print_to_log("pH:",pH)
 
-  hba1cl=record['3'][22:22+5].strip()
-  print_to_log("HbA1c (Labile): ",hba1cl)
+  pCO2=data[b'pCO2'].split()[0]
+  print_to_log("pCO2:",pCO2)
 
-  hba1cs=record['3'][27:27+5].strip()
-  print_to_log("HbA1c (Stable): ",hba1cs)
+  pO2=data[b'pO2'].split()[0]
+  print_to_log("pO2:",pO2)
 
-  hba0=record['3'][32:32+5].strip()
-  print_to_log("HbA0: ",hba0)
-  
-  hv0=record['3'][37:37+5].strip()
-  print_to_log("Hb V0 (HbD): ",hv0)
-  
-  hv1=record['3'][42:42+5].strip()
-  print_to_log("Hb V1 (HbS): ",hv1)
-  
-  hv2=record['3'][47:47+5].strip()
-  print_to_log("Hb V1 (HbC): ",hv2)
-  
-  phv3=record['3'][52:52+5].strip()
-  print_to_log("Possible Hb V2 (HbE) ???: ",phv3)  
+  Na=data[b'Na'].split()[0]
+  print_to_log("Na:",Na)
 
-  auc=record['3'][57:57+5].strip()
-  print_to_log("Total area under curve ???: ",auc)
+  K=data[b'K'].split()[0]
+  print_to_log("K:",K)
 
-  print_to_log("### managing record 4 (Data collection information):",record['4'])
-  print_to_log("Chromatogram Start time: ",record['4'][0:4].strip())
-  print_to_log("Reading taken every X100 milliseconds : ",record['4'][4:5].strip())
-  print_to_log("Number of peaks : ",record['4'][5:7].strip())
-  print_to_log("Number of raw data sets : ",record['4'][7:11].strip())
+  iCa=data[b'iCa'].split()[0]
+  print_to_log("iCa:",iCa)
 
-  if(record['4'][5:7].strip()=='0'):
-    print_to_log('Number of peaks are zero','Returning False');
-    peak_data_dict={}
-    #return False;
-  else:
-    print_to_log("### managing record 5 (Peak data) Not used currently: ",record['5'])
-    #'5 1A1A  B  15 650  15  77  81    4.35  0.5'
-    #'112123451123412341234123412341234567812345'
-    #'   01234567890123456789012345678901234567890
-    #dictionary.items() converts it in to list of tuples
-    #example
-    #>>> x
-    #{1: 2, 3: 4, 'a': 'b'}
-    #>>> x.items()
-    #dict_items([(1, 2), (3, 4), ('a', 'b')])
+  Cl=data[b'Cl'].split()[0]
+  print_to_log("Cl:",Cl)
 
-    peak_data_dict={}
-    for peak_number,peak_data in record['5'].items():
-      print_to_log("pick number:{}, ".format(peak_number),"peak_data:{}".format(peak_data))
-      print_to_log("pick number:{}, ".format(peak_number),
-"peak_name:{}, \
-peak_type:{}, \
-base_start:{}, \
-base_end:{}, \
-peak_start:{}, \
-peak_top:{}, \
-peak_end:{}, \
-peak_area:{}, \
-peak_%:{}, "
-                  .
-                  format(
-                          peak_data[0:5].strip(),
-                          peak_data[5:6].strip(),
-                          peak_data[6:6+4].strip(),
-                          peak_data[10:10+4].strip(),
-                          peak_data[14:14+4].strip(),
-                          peak_data[18:18+4].strip(),
-                          peak_data[22:22+4].strip(),
-                          peak_data[26:26+8].strip(),
-                          peak_data[34:34+5].strip(),
-                        )
-                )
+  GLU=data[b'GLU'].split()[0]
+  print_to_log("GLU:",GLU)
 
-      #peak_data_dict.update({peak_data[0:5].strip():{"peak_persent":peak_data[34:34+5].strip()}})
-      peak_data_dict.update({peak_data[0:5].strip():{"peak_persent":peak_data[34:34+5].strip(),"peak_top":peak_data[18:18+4].strip()}})
-    print_to_log("peak_data_dict:",peak_data_dict)                    
-  print_to_log("### managing record 6: (nothing inside. Just end of record 5)",record['6'])
-  print_to_log("### managing record 7: (data points)",record['7'])
+  LAC=data[b'LAC'].split()[0]
+  print_to_log("LAC:",LAC)
 
-  x_values=()
-  y_values=()
-  x_counter=0
-  step=(0.2/60)
+  HCO3=data[b'HCO3'].split()[0]
+  print_to_log("HCO3:",HCO3)
 
-  for point_set,points in record['7'].items():
-    print_to_log("point_set: {}".format(point_set),"points: {}".format(points))
-    x_values=x_values+(x_counter,x_counter+step*1,x_counter+step*2,x_counter+step*3,x_counter+step*4,
-                    x_counter+step*5,x_counter+step*6,x_counter+step*7,x_counter+step*8,x_counter+step*9)
-    x_counter=x_counter+step*10
-    y_values=y_values+(float(points[0:9].strip()),float(points[9:18].strip()),float(points[18:27].strip()),float(points[27:36].strip()),float(points[36:45].strip()),
-                        float(points[45:54].strip()),float(points[54:63].strip()),float(points[63:72].strip()),float(points[72:81].strip()),float(points[81:90].strip()))
-  print_to_log("x_values",x_values)
-  print_to_log("y_values",y_values)
-  axis_range_tuple=(min(x_values),max(x_values),min(y_values),max(y_values)/20)
-  png=mk_histogram_from_tuple((x_values,y_values),'HbA1c HPLC Chromatogram','(Retention time) mintues','mV',axis_range_tuple,peak_data_dict)
-  #fff=open('/root/d.png','wb')
-  #fff.write(png)
-  #fff.close() 
-
-  print_to_log("### managing record 8: (Calibration Information) Not used",record['8'])
-
-  #Now update mysql database
   ms=my_sql()
   con=ms.get_link(astm_var.my_host,astm_var.my_user,astm_var.my_pass,astm_var.my_db)
 
-  prepared_sql='insert into primary_result \
-                             (sample_id,examination_id,result,uniq) \
+
+  prepared_sql='insert into sensa \
+                             (date_time,sample_id,pH,pCO2,pO2,Na,K,iCa,Cl,GLU,LAC,HCO3) \
                              values \
-                             (%s,%s,%s,%s) \
-                             ON DUPLICATE KEY UPDATE result=%s'
-
-  prepared_sql_blob='insert into primary_result_blob \
-                             (sample_id,examination_id,result,uniq) \
-                             values \
-                             (%s,%s,%s,%s) \
-                             ON DUPLICATE KEY UPDATE result=%s'
-
-  if(sample_id.rstrip(' ').isnumeric() == False):
-    print_to_log('sample id is not number?:',sample_id)
-    return False;
-
-  #peak_data_dict: {'A1A': {'peak_persent': '0.5'}, 'A1B': {'peak_persent': '1.4'}, 'F': {'peak_persent': '0.6'}, 'LA1C+': {'peak_persent': '3.6'}, 'SA1C': {'peak_persent': '10.8'}, 'A0': {'peak_persent': '85.1'}}
-
-  for code,code_data in peak_data_dict.items():
-    eid=get_eid_for_sid_code(ms,con,sample_id,code,equipment)
-    data_tpl=(sample_id,eid,code_data['peak_persent'],uniq,code_data['peak_persent'])        
-    try:          
-      cur=ms.run_query(con,prepared_sql,data_tpl)
-      msg=prepared_sql
-      print_to_log('prepared_sql:',msg)
-      msg=data_tpl
-      print_to_log('data tuple:',msg)
-      print_to_log('cursor:',cur)            
-      ms.close_cursor(cur)
-    except Exception as my_ex:
-      msg=prepared_sql
-      print_to_log('prepared_sql:',msg)
-      msg=data_tpl
-      print_to_log('data tuple:',msg)
-      print_to_log('exception description:',my_ex)
-
-  #for chromatogram, 'chrom' is nowhere in data!!! It is my creation. Similar entry required in host_code
-  chrom_eid=get_eid_for_sid_code_blob(ms,con,sample_id,'chrom',equipment)  
-  data_tpl=(sample_id,chrom_eid,png,uniq,png)
-
-  try:          
-    cur=ms.run_query(con,prepared_sql_blob,data_tpl)
-    msg=prepared_sql_blob
+                             (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+  data_tpl=(date_time,sid,pH,pCO2,pO2,Na,K,iCa,Cl,GLU,LAC,HCO3)
+  try:
+    cur=ms.run_query(con,prepared_sql,data_tpl)
+    msg=prepared_sql
     print_to_log('prepared_sql:',msg)
-    #msg=data_tpl
-    #print_to_log('data tuple:',msg)
-    #print_to_log('cursor:',cur)            
+    msg=data_tpl
+    print_to_log('data tuple:',msg)
+    #print_to_log('cursor:',cur)
     ms.close_cursor(cur)
-  
+
   except Exception as my_ex:
-    msg=prepared_sql_blob
+    msg=prepared_sql
     print_to_log('prepared_sql:',msg)
-    #msg=data_tpl
-    #print_to_log('data tuple:',msg)
+    msg=data_tpl
+    print_to_log('data tuple:',msg)
     print_to_log('exception description:',my_ex)
 
 while True:
   if(f.get_first_inbox_file()):
     all_record_tuple=analyse_file(f.fh)
     print_to_log("all record:",all_record_tuple)
-    #manage_all_record(all_record_tuple)
-    #f.archive_inbox_file()
+    manage_all_record(all_record_tuple)
+    f.archive_inbox_file()
     time.sleep(1)

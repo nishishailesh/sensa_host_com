@@ -1,0 +1,10 @@
+[Unit]
+Description=exchange of data between inbox/outbox with mysql for Sensacore Blood Gas analyser using manufacturer defined protocol
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/root/sensa/sensa_write.py
+
+[Install]
+WantedBy=multi-user.target

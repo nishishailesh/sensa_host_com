@@ -1,5 +1,5 @@
 #!/bin/sh
-cp tosoh_read.service /lib/systemd/system/
-cp tosoh_write.service /lib/systemd/system/
+cp sensa_read.service /lib/systemd/system/
+cp sensa_write.service /lib/systemd/system/
 
 
