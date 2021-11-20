@@ -87,7 +87,7 @@ while True:
     fcntl.flock(x, fcntl.LOCK_EX | fcntl.LOCK_NB)   #lock file
     byte_array=[]
 
-  if(byte_array[-8:]==end_byte_str):		#file opened / start_of_data received
+  if(byte_array[-8:]==end_byte_str and x!=None):		#file opened / start_of_data received
     if(x==None):
       logging.debug("File open problem")
     else:

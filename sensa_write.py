@@ -220,13 +220,17 @@ def manage_record(sid,data):
     print_to_log('data tuple:',msg)
     #print_to_log('cursor:',cur)
     ms.close_cursor(cur)
-
+    print_to_log("Reached end of try:","mysql Work done") 
   except Exception as my_ex:
     msg=prepared_sql
     print_to_log('prepared_sql:',msg)
     msg=data_tpl
     print_to_log('data tuple:',msg)
     print_to_log('exception description:',my_ex)
+  ms.close_link(con)
+
+
+
 
 while True:
   if(f.get_first_inbox_file()):
